@@ -1,0 +1,32 @@
+rules_version = '2';
+
+// MVP rules — cocokkan dengan auth setup kamu nanti.
+// Untuk produksi, batasi write hanya ke operator/admin yang sudah login.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /queues/{ticketId} {
+      // Customer boleh baca tiketnya sendiri & ambil tiket baru
+      allow read: if true;
+      allow create: if request.resource.data.status == 'waiting';
+      // Update status hanya boleh dilakukan operator (cek custom claim)
+      allow update: if request.auth != null
+                    && request.auth.token.role in ['operator', 'admin'];
+      allow delete: if request.auth != null
+                    && request.auth.token.role == 'admin';
+    }
+
+    match /counters/{counterId} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.token.role in ['operator', 'admin'];
+    }
+
+    match /settings/{prefix} {
+      allow read: if true;
+      // Diupdate via transaksi saat take ticket — di MVP biarkan terbuka,
+      // di produksi pindahkan logic ini ke Cloud Function callable.
+      allow write: if true;
+    }
+  }
+}

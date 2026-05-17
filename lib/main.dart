@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'core/constants.dart';
 import 'core/theme.dart';
+import 'firebase_options.dart';
 import 'data/repositories/queue_repository.dart';
 import 'data/services/deeplink_service.dart';
 import 'data/services/notification_service.dart';
@@ -19,9 +20,16 @@ import 'presentation/screens/operator/scanner_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Init Firebase. Setelah `flutterfire configure`, ganti dengan:
-  //   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Firebase.initializeApp();
+  // Init Firebase dengan configuration dari firebase_options.dart
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    // Jika Firebase config dari resource gagal, tetap lanjutkan
+    // (untuk development tanpa google-services.json real)
+    debugPrint('Firebase init warning: $e');
+  }
 
   // Offline persistence — penting buat WiFi restoran yang flaky.
   if (!kIsWeb) {

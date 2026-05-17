@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="firebase_database_url">https://resto-queue-dev.firebaseio.com</string>
+    <string name="firebase_app_id">1:123456789:android:abc123def456ghi789</string>
+    <string name="firebase_api_key">AIzaSyDummy_Key_For_Development_Only</string>
+    <string name="firebase_storage_bucket">resto-queue-dev.appspot.com</string>
+    <string name="project_id">resto-queue-dev</string>
+</resources>
